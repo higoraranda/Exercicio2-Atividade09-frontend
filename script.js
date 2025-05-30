@@ -1,4 +1,4 @@
-const API_URL = 'https://seu-backend.onrender.com/notes';
+const API_URL = 'https://exercicio2-atividade09-backend-1.onrender.com';
 
 async function loadNotes() {
   const response = await fetch(API_URL);
