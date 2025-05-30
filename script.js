@@ -1,68 +1,60 @@
-const API_URL = 'https://exercicio2-atividade09-backend-1.onrender.com';
+const API = "https://exercicio2-atividade09-backend-1.onrender.com"; // troque para seu link da Render
 
-document.addEventListener('DOMContentLoaded', loadNotes);
+const form = document.getElementById("note-form");
+const title = document.getElementById("title");
+const content = document.getElementById("content");
+const list = document.getElementById("notes-list");
 
-async function loadNotes() {
-  try {
-    const response = await fetch(API_URL);
-    const notes = await response.json();
-    const notesList = document.getElementById('notesList');
-    notesList.innerHTML = notes.map(note => `
-      <div class="note" data-id="${note.id}">
-        <h3>${note.title}</h3>
-        <p>${note.content}</p>
-        <button onclick="editNote(${note.id})">Editar</button>
-        <button onclick="deleteNote(${note.id})">Excluir</button>
-      </div>
-    `).join('');
-  } catch (error) {
-    console.error("Erro ao carregar notas:", error);
-  }
-}
+let editingId = null;
 
-document.getElementById('noteForm').addEventListener('submit', async (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const title = document.getElementById('title').value;
-  const content = document.getElementById('content').value;
+  const nota = { title: title.value, content: content.value };
 
-  try {
-    await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content })
+  if (editingId) {
+    await fetch(`${API}/${editingId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nota),
     });
-    loadNotes(); // Recarrega a lista após criar
-    document.getElementById('noteForm').reset(); // Limpa o formulário
-  } catch (error) {
-    console.error("Erro ao criar nota:", error);
+    editingId = null;
+  } else {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nota),
+    });
   }
+
+  form.reset();
+  loadNotas();
 });
 
-async function editNote(id) {
-  const newTitle = prompt("Novo título:");
-  const newContent = prompt("Novo conteúdo:");
-  
-  if (newTitle && newContent) {
-    try {
-      await fetch(`${API_URL}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTitle, content: newContent })
-      });
-      loadNotes(); // Recarrega a lista após editar
-    } catch (error) {
-      console.error("Erro ao editar nota:", error);
-    }
-  }
+async function loadNotas() {
+  const res = await fetch(API);
+  const notas = await res.json();
+
+  list.innerHTML = "";
+  notas.forEach((n) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${n.title}</strong><br>${n.content}
+      <button onclick="editNota(${n.id}, '${n.title}', '${n.content}')">Editar</button>
+      <button onclick="deleteNota(${n.id})">Excluir</button>
+    `;
+    list.appendChild(li);
+  });
 }
 
-async function deleteNote(id) {
-  if (confirm("Tem certeza que deseja excluir esta nota?")) {
-    try {
-      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      loadNotes(); // Recarrega a lista após excluir
-    } catch (error) {
-      console.error("Erro ao excluir nota:", error);
-    }
-  }
+async function deleteNota(id) {
+  await fetch(`${API}/${id}`, { method: "DELETE" });
+  loadNotas();
 }
+
+function editNota(id, t, c) {
+  editingId = id;
+  title.value = t;
+  content.value = c;
+}
+
+loadNotas();

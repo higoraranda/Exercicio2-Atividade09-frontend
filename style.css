@@ -1,12 +1,19 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 20px;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
 }
-.note {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px 0;
+
+form {
+  margin-bottom: 20px;
 }
+
+input, textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 button {
-  margin: 5px;
+  margin-right: 10px;
 }
