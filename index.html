@@ -7,12 +7,16 @@
 </head>
 <body>
   <h1>Minhas Notas</h1>
+
   <form id="note-form">
     <input type="text" id="title" placeholder="Título" required />
     <textarea id="content" placeholder="Conteúdo" required></textarea>
     <button type="submit">Salvar Nota</button>
   </form>
-  <ul id="notes-list"></ul>
+
+  <button id="ver-notas">Ver Notas</button>
+  <ul id="notes-list" style="display: none;"></ul>
+
   <script src="script.js"></script>
 </body>
 </html>
