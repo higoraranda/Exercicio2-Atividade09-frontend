@@ -28,7 +28,6 @@ form.addEventListener("submit", async (e) => {
   }
 
   form.reset();
-  loadNotas();
 });
 
 verNotasBtn.addEventListener("click", () => {
