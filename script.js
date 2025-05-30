@@ -1,4 +1,4 @@
-const API = "https://exercicio2-atividade09-backend-1.onrender.com"; // Substitua com o link real
+const API = "https://exercicio2-atividade09-backend-1.onrender.com/notes"; 
 
 const form = document.getElementById("note-form");
 const title = document.getElementById("title");
